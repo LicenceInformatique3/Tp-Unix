@@ -17,3 +17,4 @@ else
 fi
 cat tmp
 rm tmp
+exit0
