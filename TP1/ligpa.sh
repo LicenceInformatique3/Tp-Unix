@@ -7,7 +7,7 @@ then
 	isPair=false
 	cat fichier | while  read ligne
 	do 
-		if [ "$isPair" = true]
+		if [ "$isPair" = true ]
 		then
 			echo $ligne
 			isPair=false
