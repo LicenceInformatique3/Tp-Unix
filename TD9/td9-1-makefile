@@ -1,0 +1,42 @@
+#TD 9-1
+
+# I - Makefile de compilation
+#1)
+
+#2)
+#Production des executables
+prog1 : f1.c prog1.o f2.o f3.o
+	gcc f1.o prog1.o f2.o f3.o -o prog1
+prog2 : f1.o f2.o prog2.o f4.o
+	gcc f1.o f2.o prog2.o f4.o -o prog2
+prog1.o : prog1.c f1.h f3.h
+	gcc -Wall -std=c99 -c prog1.c
+prog2.o : prog2.c f1.h f2.h f4.h
+	gcc -Wall -std=c99 -c prog2.c
+f1.o : f1.c f1.h
+	gcc -Wall -std=c99 -c f1.c
+f2.o : f2.c f2.h
+	gcc -Wall -std=c99 -c f2.c
+f3.o : f3.c f1.h f2.h f3.h
+	gcc -Wall -std=c99 -c f3.c
+f4.o : f4.c f4.h
+	gcc -Wall -std=c99 -c f4.c
+
+#Dependances aux .h			
+#cette partie peut etre generee (cf fin du cours)
+prog1.o : f1.h f3.h
+prog2.o : fi.h f2.h f4.h
+f1.o : f1.h
+f2.o : f2.h
+f3.o : f1.h f2.h f3.h
+f4.o : f4.h
+
+#3)
+#Au debut:
+all :: prog1 prog2			
+# :: veut dire que ce n'est pas un fichier
+
+//4)
+#Vers la fin du Makefile
+clean ::
+	rm -f *.o prog1 prog2
