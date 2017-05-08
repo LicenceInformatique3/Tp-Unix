@@ -8,8 +8,7 @@
 #include <unistd.h>
 #include <signal.h>
 
-int mysignal (int sig, void (*h)(int), int options)
-{
+int mysignal (int sig, void (*h)(int), int options){
 	struct sigaction s;
 	s.sa_handler = h;
 	sigemptyset (&s.sa_mask);
@@ -19,8 +18,7 @@ int mysignal (int sig, void (*h)(int), int options)
 	return r;
 }
 
-void capter_ALRM(int sig)
-{
+void capter_ALRM(int sig){
 	static int compteur = 0;
 	compteur ++;
 	printf("compteur = %d\n", compteur);
@@ -28,8 +26,7 @@ void capter_ALRM(int sig)
 	else exit(0);
 }
 
-int main()
-{
+int main(){
 	mysignal(SIGALRM, capter_ALRM, SA_RESTART);
 	alarm(2);
 	int c;
@@ -47,30 +44,25 @@ int main()
 
 pid_t pid_pere = 0;
 
-void capter(int sig)
-{
+void capter(int sig){
 	printf("Recu signal %d\n", sig);
 	alarm(1);
-	if(kill(pid_pere, 0) < 0) //pid_pere == getpid()
-	{
+	if(kill(pid_pere, 0) < 0) //pid_pere == getpid(){
 		printf("Fils detecte fin pere\n");
 		exit(0);
 	}
 }
 
-int main()
-{
+int main(){
 	pid_pere = getpid();
 	printf("Pere %d\n", (int)pid_pere);
 	pid_t p = fork();
-	if(p < 0)
-	{
+	if(p < 0){
 		perror("fork");
 		exit(1);
 	}
 
-	if(p == 0) // fils
-	{
+	if(p == 0) // fils{
 		printf("Fils %d\n", (int)getpid());
 		mysignal(SIGALRM, capter, SA_RESTART);
 		alarm(1);
@@ -96,8 +88,7 @@ int main()
 #include <unistd.h>
 #include <signal.h>
 
-int envoyer_signal_int(int sig, int val, int pid)
-{
+int envoyer_signal_int(int sig, int val, int pid){
 	union sigval value;
 	value.sigval_int = val;
 	int r = sigqueue(pid, sig, value);
@@ -105,10 +96,8 @@ int envoyer_signal_int(int sig, int val, int pid)
 	return r;
 }
 
-int main(int argc, char *argv[])
-{
-	if(argc-1 != 3)
-	{
+int main(int argc, char *argv[]){
+	if(argc-1 != 3){
 		fprintf(stderr, "Usage: %s sig val pid\n", argv[0]);
 		exit(1);
 	}
@@ -121,8 +110,7 @@ int main(int argc, char *argv[])
 }
 
 //2)
-int qsignal(int sig, void(*k)(int, sig_info_r*, void *), int options)
-{
+int qsignal(int sig, void(*k)(int, sig_info_r*, void *), int options){
 	struct sigaction s;
 	s.SA_sigaction = h;
 	sigemptyset(&s.sa_mask);
@@ -132,16 +120,14 @@ int qsignal(int sig, void(*k)(int, sig_info_r*, void *), int options)
 	return r;
 }
 
-void capter(int sig, sig_info_r *info, void(*ctx))
-{
+void capter(int sig, sig_info_r *info, void(*ctx)){
 	(void) ctx; //inutilisé
 	printf("Signal %d capté\n", sig);
 	if(info->si_code == SI_QUEUE)
 		printf("PID emetteur %d, valeur %d\n", info->si_pid, info->si_value.sigval_int);
 }
 
-int main()
-{
+int main(){
 	for(int i = r; i < NSIG; i++)
 		qsignal(i, capter, SA_RESTART);
 	//maintient le processus en vie
