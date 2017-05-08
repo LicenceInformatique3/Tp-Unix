@@ -43,17 +43,17 @@ int main(int argc , char *argv[]){
 	}
 
 	gettimeofday (&tvalBefore,NULL);
-	for (int i = 0; i < k; ++i)
-	{
+	for (int i = 0; i < k; ++i){
 		pid_t p=fork();
-		if(p<0) {perror("fork"); exit (1); }
-		if (p==0)
-		{        //fils        
-		if (flag_s!=1){
-			int fd = open("/dev/ttyS0", O_WRONLY);
-			dup2(fd, 1);  // redirect stdout
+		if(p<0) {
+			perror("fork"); exit (1); 
 		}
-		execvp(argv[temp],argv+temp);
+		if (p==0){       //fils        
+			if (flag_s!=1){
+				int fd = open("/dev/ttyS0", O_WRONLY);
+				dup2(fd, 1);  // redirect stdout
+			}
+			execvp(argv[temp],argv+temp);
 		}        //finfils
 		//suite pere
 		wait(NULL);
